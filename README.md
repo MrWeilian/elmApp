@@ -1,21 +1,31 @@
 # aelm
 
-> A Vue.js project
+> A Vue.js饿了么app总结
 
-## Build Setup
+## 一、基础页面骨架构建。<br>
+当然，最开始的就是部署整个脚手架工具，然后是相关需要用的依赖安装。`需求分析，分析设计图结构。`构思组件拆分，布置vue-router。<br>
+## 二、各组件开发。<br>
+基本分了三大组件块1.商品页；2.评论页；3.商家页。在这基础上还细分了一些功能组件（复用性），如小图标组件，评分组件。
+## 三、编译打包。<br>
+组件开发完，就是webpack打包环节。
 
-``` bash
-# install dependencies
-npm install
+> 开发技术难点及收获
 
-# serve with hot reload at localhost:8080
-npm run dev
+1.better-scroll的运用以及对vue生命周期的理解。基于元素的宽高计算再渲染的原理，需要熟悉vue生命周期，在合适的时候，做合适的操作，还有相关的异步操作确保渲染正常。其实看似很简单的原理和细节，一不注意就容易出现异常，在此也提醒自己多注意边界处理，极端情况。<br>
+2.商品分类（大标题）与商品组件之间的对应联动。主要是关于计算，计算滚动的位置和当前区块区间的位置，联动起来。`额，记得开发到这一块的时候，出现了个小bug，就是快滑菜单等菜单自己停下来的时候不能立马点击到元素。分析测试了很久，定位到应该是滚动菜单的回弹导致点击失效，最后缩短了一下滑动的回弹时间，问题解决了。也不知道又没人遇到`。<br>
+3.js钩子动画。购物车的小球飞动效果。也是设计了很多计算，获取元素的位置。最后结合vue提供的js钩子实现动画，配合css3的动画效果，当然还有贝塞尔曲线。<br>
+4.数据传递。父子组件之间的数据传递props。还有传值的类型不是引用类型的父子组件的传值及修改$emit。<br>
+5.布局技巧增强（flex）。图片加载前为图片撑开高度以便于项目优化，减少浏览器重绘，采用width和padding-top的比例关系。<br>
 
-# build for production with minification
-npm run build
+> 项目总结及优化思考
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+总结：<br>
+1.熟悉vue.js运用，生命周期理解深入。<br>
+2.vue中的插件引用，依赖安装，stylus的使用（css变量，css函数...），理解css预编译的好处。<br>
+3.滚动条联动实现，还原APP移动端交互效果。<br>
+4.css动画结合vuejs的运动，强化对过度效果的理解，对用户体验认识加深。<br>
+<br>
+优化思考：<br>
+1.懒加载。其实商品过多，对于请求也是一种消耗，可以采用懒加载技术实现加载速度优化。
+2.css sprite/base64。小图标的使用都是采用小图片形式，其实可以小图片合并于一张，运用背景图计算position减少请求。当然，也可以考虑小图片打成base64减少请求。但是这一布会加大页面体积，具体base64的使用与否，还需要结合实际情况和试验再做决定。
+3.函数节流。商品组件中做的菜单滚动联动，是在每一次scroll滚动的时候就触发计算及判断，其实对浏览器也是一种损耗。可以采用节流的方法优化。方案暂时想的就是requestAnimationFrame吧。
